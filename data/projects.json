@@ -3,31 +3,31 @@
   "projects": [
     {
       "id": "app-nexorealm",
-      "name": "Nexo Realm App",
+      "name": "Nexo Hub",
       "url": "https://app.nexorealm.org",
-      "category": "Replace with category",
+      "category": "Tools",
       "icon": "layout-dashboard",
       "status": "live",
       "featured": true,
-      "title": "Replace with project title",
-      "description": "Replace with project description",
-      "tags": ["Replace", "with", "tags"]
+      "title": "Nexo Hub — Your Digital Command Center",
+      "description": "A curated, searchable directory of 490+ essential websites across AI, gaming, dev tools, design, music, finance, and more.",
+      "tags": ["free", "tools", "no ads"]
     },
     {
       "id": "boost-nexorealm",
-      "name": "Nexo Boost",
+      "name": "Next Boost",
       "url": "https://boost.nexorealm.org",
-      "category": "Replace with category",
+      "category": "Social",
       "icon": "trending-up",
       "status": "live",
       "featured": true,
-      "title": "Replace with project title",
-      "description": "Replace with project description",
-      "tags": ["Replace", "with", "tags"]
+      "title": "Next Boost — Grow Your Social With Real Engagement",
+      "description": "Grow your social the smart way. Complete tasks for other creators, earn points, and spend them to get real followers, likes, views and Discord members.",
+      "tags": ["free", "social", "no ads"]
     },
     {
       "id": "list-nexosites",
-      "name": "Nexo List",
+      "name": "Watch Log",
       "url": "https://list.nexosites.xyz",
       "category": "Replace with category",
       "icon": "list",
@@ -39,15 +39,15 @@
     },
     {
       "id": "nexosites",
-      "name": "Nexosites",
+      "name": "Nexo Sites",
       "url": "https://nexosites.xyz",
-      "category": "Replace with category",
+      "category": "Development",
       "icon": "globe",
       "status": "live",
       "featured": true,
-      "title": "Replace with project title",
-      "description": "Replace with project description",
-      "tags": ["Replace", "with", "tags"]
+      "title": "NexoSites | Modern Web Development Agency",
+      "description": "Premium, fast, mobile-ready websites for businesses worldwide — starting from $55. You buy the domain, we handle everything else. No upfront payment.",
+      "tags": ["web", "cheap", "dev"]
     }
   ]
 }
