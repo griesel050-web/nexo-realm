@@ -11,7 +11,7 @@
       "featured": true,
       "title": "Nexo Hub — Your Digital Command Center",
       "description": "A curated, searchable directory of 490+ essential websites across AI, gaming, dev tools, design, music, finance, and more.",
-      "tags": ["free", "tools", "no ads"]
+      "tags": ["free", "tools", "no-ads"]
     },
     {
       "id": "boost-nexorealm",
@@ -23,19 +23,19 @@
       "featured": true,
       "title": "Next Boost — Grow Your Social With Real Engagement",
       "description": "Grow your social the smart way. Complete tasks for other creators, earn points, and spend them to get real followers, likes, views and Discord members.",
-      "tags": ["free", "social", "no ads"]
+      "tags": ["free", "social", "no-ads"]
     },
     {
       "id": "list-nexosites",
       "name": "Watch Log",
       "url": "https://list.nexosites.xyz",
-      "category": "Replace with category",
+      "category": "Anime",
       "icon": "list",
       "status": "live",
       "featured": false,
-      "title": "Replace with project title",
-      "description": "Replace with project description",
-      "tags": ["Replace", "with", "tags"]
+      "title": "WATCH LOG - Anime list",
+      "description": "Your personal anime viewing record.",
+      "tags": ["anime", "free", "no-ads"]
     },
     {
       "id": "nexosites",
