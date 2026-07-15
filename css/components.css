@@ -233,11 +233,14 @@
   gap: var(--space-7);
   grid-template-columns: 1.4fr 1fr 1fr 1fr;
 }
+.footer__grid--3 { grid-template-columns: 1.6fr 1fr 1fr; }
 @media (max-width: 800px) {
   .footer__grid { grid-template-columns: 1fr 1fr; }
+  .footer__grid--3 { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 520px) {
   .footer__grid { grid-template-columns: 1fr; }
+  .footer__grid--3 { grid-template-columns: 1fr; }
 }
 .footer__brand { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
 .footer__brand img { height: 26px; }

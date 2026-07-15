@@ -13,9 +13,6 @@ nexorealm/
 ├── projects/index.html     Projects (search/filter/sort)
 ├── socials/index.html      Socials
 ├── showcase/index.html     Showcase
-├── contact/index.html      Contact
-├── privacy/index.html      Privacy Policy
-├── terms/index.html        Terms of Service
 ├── 404.html                Cloudflare's auto-detected 404 page
 ├── 404/index.html          Same 404 page at a clean /404/ URL
 ├── css/
@@ -26,12 +23,12 @@ nexorealm/
 │   └── pages.css           Page-specific layout (hero, grids, sections)
 ├── js/
 │   ├── theme.js            Dark/light toggle (localStorage)
-│   ├── main.js              Nav, mobile menu, reveals, counters, ripple
+│   ├── main.js              Nav, mobile menu, reveals, counters, ripple, icons
 │   ├── projects.js         Renders project cards from data/projects.json
 │   └── socials.js          Renders social cards from data/socials.json
 ├── data/
 │   ├── projects.json       Every project card — edit this, not the HTML
-│   └── socials.json        Every social link — ships empty on purpose
+│   └── socials.json        Every social link — edit this, not the HTML
 ├── images/
 │   ├── logo.png            Nav/footer logo (cropped from your upload)
 │   ├── og-image.jpg        Social share preview image
@@ -46,18 +43,19 @@ nexorealm/
 
 No build step. No framework. Every page is plain HTML, CSS, and JS.
 
+The Contact, Privacy Policy, and Terms of Service pages have been removed, along with every link to them in the nav and footer.
+
 ---
 
-## Before you deploy — replace these placeholders
+## Icons — how they actually load
 
-The brief was explicit about never inventing project details, so a few things are still left as clearly-marked placeholders on purpose:
+Three different icon sources are in play, on purpose:
 
-1. **Project titles, descriptions, categories, tags** — in `data/projects.json`. The four real URLs you gave me are wired in, but their copy is placeholder text ("Replace with project title", etc.) since I don't know what those sites actually do.
-2. **Social accounts** — `data/socials.json` ships with an empty `socials` array. Add real accounts and they'll appear automatically on `/socials/` and in the footer.
-3. **Contact details** — email, Discord invite, location on `/contact/`. The form itself isn't wired to a destination yet (see below).
-4. **Legal pages** — `/privacy/` and `/terms/` are structured starter templates, not legal advice. Have them reviewed before publishing.
+1. **Project cards & the marquee** pull each project's **real favicon** live from `https://www.google.com/s2/favicons?domain=...` — not a generic icon. If a favicon ever fails to load, it falls back to a small Lucide icon (the `icon` field in `projects.json`).
+2. **Social cards & footer links** use real **brand logos** from [Simple Icons](https://simpleicons.org) (`cdn.simpleicons.org`), since Lucide doesn't carry brand marks like Discord or TikTok. Same fallback pattern if one 404s.
+3. **Everything else** (nav theme toggle, menu button, arrows, search, pillar icons, etc.) uses **Lucide**, loaded from `unpkg.com` and rendered by `js/main.js` on every single page load — this used to only run on pages that also fetched project/social data, which is why icons were missing on About and a few other pages. Fixed now: `initIcons()` runs unconditionally.
 
-The domain is already set to `https://nexorealm.org` across every canonical/OG tag, `robots.txt`, and `sitemap.xml` — no find-and-replace needed there.
+All three depend on outbound network access from the visitor's browser (Google's favicon service, Simple Icons' CDN, unpkg, Google Fonts) — normal for any live site, but they won't resolve if you preview this in a fully offline sandbox.
 
 ---
 
@@ -70,19 +68,19 @@ Each project is one object in the `projects` array:
   "id": "unique-slug",
   "name": "Display Name",
   "url": "https://example.com",
-  "category": "Analytics",
+  "category": "Tools",
   "icon": "layout-dashboard",
   "status": "live",
   "featured": true,
   "title": "Optional longer title",
   "description": "One or two sentences about what it does.",
-  "tags": ["SEO", "Free"]
+  "tags": ["free", "tools"]
 }
 ```
 
 - `status`: `"live"`, `"beta"`, or `"soon"`.
 - `featured`: `true` puts it in the Home marquee/featured grid and the Showcase page.
-- `icon`: any [Lucide](https://lucide.dev/icons/) icon name.
+- `icon`: a [Lucide](https://lucide.dev/icons/) name — only used as a fallback if the site's real favicon fails to load.
 - Categories are read automatically — add a new one and a filter chip appears on `/projects/` with no other changes needed.
 
 ## Editing `data/socials.json`
@@ -96,7 +94,7 @@ Each project is one object in the `projects` array:
 }
 ```
 
-Supported `platform` values: `discord`, `github`, `youtube`, `tiktok`, `instagram`, `facebook`, `x`, `reddit`, `linkedin`, `twitch`, `email` (use `url: "mailto:you@example.com"`), `website`.
+Supported `platform` values: `discord`, `github`, `youtube`, `tiktok`, `instagram`, `facebook`, `x`, `reddit`, `linkedin`, `twitch`, `email` (use `url: "mailto:you@example.com"`), `website`. The `icon` field should be a [Simple Icons](https://simpleicons.org) slug (matches the platform name in almost every case).
 
 ---
 
@@ -105,18 +103,27 @@ Supported `platform` values: `discord`, `github`, `youtube`, `tiktok`, `instagra
 1. Create `your-page/index.html` (clean-URL folder pattern — Cloudflare Pages serves `folder/index.html` at `/folder/` automatically).
 2. Copy the `<head>`, nav, and footer markup from an existing page at the same depth (one folder deep from root) so relative paths (`../css/...`, `../images/...`) match.
 3. Add the page to `NAV_ITEMS` if it should appear in navigation — or just link to it from wherever makes sense.
-4. Give it a unique `<title>`, meta description, and canonical URL.
+4. Give it a unique `<title>`, meta description, canonical URL, and add it to `sitemap.xml`.
 
 If you'd rather not hand-edit HTML, the source `build.py` + `pages_*.py` scripts used to generate this site (Python, not shipped in this folder) show the templating approach — regenerate any page by editing its `pages_*.py` and re-running it.
 
 ---
 
-## Updating SEO
+## SEO — what's already in place
 
-- **Per-page metadata** already lives in each page's `<head>` — title, description, canonical, Open Graph, Twitter Card.
-- **Sitemap** — `sitemap.xml` lists every route. Add a new `<url>` block when you add a page.
-- **Structured data** — the homepage includes a `WebSite` JSON-LD block. Add more (e.g. `Organization`, `BreadcrumbList`) as needed.
-- **Images** — all `<img>` tags include `width`/`height` to avoid layout shift; add `loading="lazy"` to any large images you add below the fold.
+- **Per-page metadata**: unique title, description, canonical URL, keywords, author, and a `robots` tag with `max-image-preview:large` / `max-snippet:-1` on every page.
+- **Open Graph + Twitter Cards**: full tag set including `og:locale`, `og:image:alt`, and a generated 1200×630 share image (`images/og-image.jpg`).
+- **Structured data (JSON-LD)**:
+  - Every page: an `Organization` schema with your logo and a `sameAs` array pulled directly from `data/socials.json` — add an account there and it's automatically included here too.
+  - Home: a `WebSite` schema.
+  - Projects: an `ItemList` of `SoftwareApplication` entries, generated from the real names, URLs, categories, and descriptions in `data/projects.json`.
+- **Meta descriptions** on Projects and Showcase name the actual projects (pulled from the JSON at build time) rather than generic copy — better for keyword relevance.
+- **Sitemap** (`sitemap.xml`) lists every live route with `lastmod`. **Update the date whenever content changes**, and add a `<url>` block when you add a page.
+- **robots.txt** allows full crawling and points to the sitemap.
+- **PWA/platform meta**: `manifest.json`, Apple touch icons, `apple-mobile-web-app-title`, MS tile meta, and a full favicon set.
+- **Performance-adjacent SEO**: every `<img>` has explicit `width`/`height` (no layout shift), `loading="lazy"` on below-the-fold images, and `preconnect` hints for every third-party origin in use (fonts, unpkg, Simple Icons, Google favicons).
+
+To push further: add a real Search Console verification meta tag once you have one, and update `sitemap.xml`'s `lastmod` dates whenever you edit `projects.json` or `socials.json`.
 
 ---
 
@@ -150,9 +157,3 @@ Every color is a CSS variable in `css/tokens.css`. The core ramp:
 - **Scroll reveal** — add `class="reveal"` (single fade-in) or `class="reveal-stagger"` (staggered children) to any element; `js/main.js` handles the rest via `IntersectionObserver`.
 - **Reduced motion** — every animation is disabled under `prefers-reduced-motion: reduce` (see the bottom of `animations.css`).
 - **Lottie** — no Lottie files are bundled (none were supplied, and the brief asked not to invent assets), so the current motion is done with CSS/SVG instead. To add real Lottie animations later: drop `.json` files in `/lottie/`, include `lottie-web` from a CDN, and target a container `<div>` with `lottie.loadAnimation(...)`.
-
----
-
-## Notes on fonts and icons
-
-This site loads **Space Grotesk** (display), **Inter** (body), and **JetBrains Mono** (utility/data) from Google Fonts, and **Lucide** icons from a CDN (`unpkg.com/lucide`). Both require outbound network access from the visitor's browser — this is normal for any live website, but means these assets won't load if you preview the site in a fully offline/sandboxed environment.

@@ -5,10 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Page not found — Nexo Realm</title>
   <meta name="description" content="The page you're looking for doesn't exist." />
-  <meta name="keywords" content="Nexo Realm, Nexoria Network, Nexo Rank, Nexo IDE, Nexo Tracker, indie developer tools, project hub, developer ecosystem" />
+  <meta name="keywords" content="Nexo Realm, Nexoria Network, Nexo Hub, Next Boost, Watch Log, Nexo Sites, indie developer tools, project hub, developer ecosystem" />
+  <meta name="author" content="Nexo Realm" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <link rel="canonical" href="https://nexorealm.org/404.html" />
   <meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-title" content="Nexo Realm" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="msapplication-TileColor" content="#0a0a0c" />
+  <meta name="msapplication-TileImage" content="images/favicons/icon-192.png" />
 
   <!-- Favicons (generated from the Nexo Realm mark) -->
   <link rel="icon" href="favicon.ico" sizes="any" />
@@ -21,12 +28,14 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Nexo Realm" />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Page not found — Nexo Realm" />
   <meta property="og:description" content="The page you're looking for doesn't exist." />
   <meta property="og:url" content="https://nexorealm.org/404.html" />
   <meta property="og:image" content="https://nexorealm.org/images/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Nexo Realm logo" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -38,6 +47,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://cdn.simpleicons.org" />
+  <link rel="preconnect" href="https://www.google.com" />
 
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -48,6 +59,25 @@
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/animations.css" />
   <link rel="stylesheet" href="css/pages.css" />
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Nexo Realm",
+      "url": "https://nexorealm.org/",
+      "logo": "https://nexorealm.org/images/logo.png",
+      "sameAs": [
+        "https://discord.gg/JFz3mVpCUm",
+        "https://www.youtube.com/@nxrealm08/",
+        "https://www.tiktok.com/@nxrealm08",
+        "https://www.instagram.com/nxrealm08",
+        "https://www.twitch.tv/nxrealm08",
+        "https://www.linkedin.com/in/nexosites/"
+      ]
+    }
+    </script>
+  
 
   <!-- Anti-flash theme bootstrap: must run before first paint -->
   <script>
@@ -77,7 +107,6 @@
         <a class="nav__link" href="socials/">Socials</a>
         <a class="nav__link" href="showcase/">Showcase</a>
         <a class="nav__link" href="about/">About</a>
-        <a class="nav__link" href="contact/">Contact</a>
       </nav>
       <div class="nav__actions">
         <button class="theme-toggle" data-theme-toggle type="button" aria-label="Toggle color theme" aria-pressed="false">
@@ -98,10 +127,9 @@
       <a class="mobile-menu__link" href="socials/">Socials</a>
       <a class="mobile-menu__link" href="showcase/">Showcase</a>
       <a class="mobile-menu__link" href="about/">About</a>
-      <a class="mobile-menu__link" href="contact/">Contact</a>
     <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
       <a class="btn btn--primary" href="projects/">Explore projects</a>
-      <a class="btn btn--ghost" href="contact/">Contact</a>
+      <a class="btn btn--ghost" href="socials/">Socials</a>
     </div>
   </div>
 
@@ -127,7 +155,7 @@
   </main>
   <footer class="footer">
     <div class="container">
-      <div class="footer__grid">
+      <div class="footer__grid footer__grid--3">
         <div class="footer__col">
           <div class="footer__brand">
             <img src="images/logo.png" alt="" width="120" height="76" />
@@ -140,13 +168,6 @@
           <a href="projects/">Projects</a>
           <a href="showcase/">Showcase</a>
           <a href="about/">About</a>
-        </div>
-        <div class="footer__col">
-          <h5>Ecosystem</h5>
-          <a href="socials/">Socials</a>
-          <a href="contact/">Contact</a>
-          <a href="privacy/">Privacy Policy</a>
-          <a href="terms/">Terms of Service</a>
         </div>
         <div class="footer__col">
           <h5>Follow</h5>

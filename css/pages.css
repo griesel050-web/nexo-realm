@@ -96,8 +96,24 @@
   flex-shrink: 0;
   color: var(--red-400);
 }
+.social-card__icon img.brand-icon { width: 22px; height: 22px; object-fit: contain; }
 .social-card__platform { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.08em; }
 .social-card__handle { font-family: var(--font-display); font-weight: 600; }
+
+/* TikTok's Simple Icons mark is solid black — invert it in dark mode so it
+   doesn't disappear against the dark card background. */
+[data-theme="dark"] .brand-icon[src*="tiktok"] { filter: invert(1); }
+
+.footer-social-icon {
+  display: inline-flex;
+  width: 15px; height: 15px;
+  margin-right: 0.5em;
+  vertical-align: -3px;
+}
+.footer-social-icon img, .footer-social-icon i {
+  width: 15px; height: 15px;
+}
+[data-theme="dark"] .footer-social-icon img[src*="tiktok"] { filter: invert(1); }
 
 /* ---------- Featured marquee strip ---------- */
 .marquee-card {

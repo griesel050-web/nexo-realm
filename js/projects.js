@@ -27,6 +27,26 @@
     return '<span class="badge ' + m.cls + '"><span class="orbit-mini"><span class="orbit-mini__dot"></span></span>' + m.label + "</span>";
   }
 
+  function faviconURL(url) {
+    return "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(hostname(url));
+  }
+
+  function attachFaviconFallbacks(root) {
+    (root || document).querySelectorAll("img.project-favicon").forEach(function (img) {
+      img.addEventListener(
+        "error",
+        function () {
+          var fallback = document.createElement("i");
+          fallback.setAttribute("data-lucide", img.getAttribute("data-fallback-icon") || "globe");
+          fallback.setAttribute("aria-hidden", "true");
+          img.replaceWith(fallback);
+          refreshIcons();
+        },
+        { once: true }
+      );
+    });
+  }
+
   function cardHTML(p) {
     var tags = (p.tags || [])
       .map(function (t) { return '<span class="tag">' + escapeHTML(t) + "</span>"; })
@@ -39,7 +59,7 @@
       '<article class="card project-card' + (isSoon ? " project-card--soon" : "") + '" data-name="' + escapeHTML(p.name.toLowerCase()) +
       '" data-category="' + escapeHTML((p.category || "").toLowerCase()) + '" data-status="' + p.status + '">' +
       '<div class="project-card__top">' +
-      '<div class="project-card__icon"><i data-lucide="' + (p.icon || "globe") + '" aria-hidden="true"></i></div>' +
+      '<div class="project-card__icon"><img class="project-favicon" src="' + faviconURL(p.url) + '" data-fallback-icon="' + (p.icon || "globe") + '" alt="" width="28" height="28" loading="lazy" /></div>' +
       statusBadge(p.status) +
       "</div>" +
       '<div><div class="project-card__name">' + escapeHTML(p.name) + '</div><div class="project-card__category">' + escapeHTML(p.category || "") + "</div></div>" +
@@ -87,7 +107,7 @@
         .map(function (p) {
           return (
             '<div class="card card--glass marquee-card">' +
-            '<div class="project-card__icon" style="margin-bottom:12px"><i data-lucide="' + (p.icon || "globe") + '" aria-hidden="true"></i></div>' +
+            '<div class="project-card__icon" style="margin-bottom:12px"><img class="project-favicon" src="' + faviconURL(p.url) + '" data-fallback-icon="' + (p.icon || "globe") + '" alt="" width="28" height="28" loading="lazy" /></div>' +
             '<div class="project-card__name">' + escapeHTML(p.name) + "</div>" +
             '<div class="project-card__category">' + escapeHTML(p.category || "") + "</div>" +
             "</div>"
@@ -99,6 +119,7 @@
     if (statLive) statLive.setAttribute("data-counter", String(projects.filter(function (p) { return p.status === "live"; }).length));
 
     refreshIcons();
+    attachFaviconFallbacks();
     document.dispatchEvent(new CustomEvent("nexo:counters-ready"));
   }
 
@@ -137,6 +158,7 @@
       grid.classList.toggle("visually-hidden", filtered.length === 0);
       if (emptyState) emptyState.hidden = filtered.length !== 0;
       refreshIcons();
+      attachFaviconFallbacks(grid);
     }
 
     if (searchInput) {
@@ -170,6 +192,7 @@
     var list = featured.length ? featured : projects;
     host.innerHTML = list.map(cardHTML).join("");
     refreshIcons();
+    attachFaviconFallbacks(host);
   }
 
   function buildCategoryChips(projects) {

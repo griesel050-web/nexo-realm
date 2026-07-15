@@ -21,6 +21,9 @@
     linkedin: "LinkedIn", twitch: "Twitch", email: "Email", website: "Website"
   };
 
+  // Lucide fallback for platforms without a clean brand mark (email/website).
+  var GENERIC_ICON = { email: "mail", website: "globe" };
+
   function escapeHTML(str) {
     var div = document.createElement("div");
     div.textContent = str == null ? "" : String(str);
@@ -33,10 +36,39 @@
     }
   }
 
+  /**
+   * Brand icons come from Simple Icons (simpleicons.org) via CDN — Lucide is a
+   * generic UI icon set and doesn't carry real brand marks like Discord or
+   * TikTok. Falls back to a generic Lucide icon if a brand icon 404s.
+   */
+  function iconMarkup(s) {
+    var slug = s.icon || s.platform;
+    if (GENERIC_ICON[s.platform]) {
+      return '<i data-lucide="' + GENERIC_ICON[s.platform] + '" aria-hidden="true"></i>';
+    }
+    return '<img class="brand-icon" src="https://cdn.simpleicons.org/' + encodeURIComponent(slug) + '" alt="" width="22" height="22" loading="lazy" />';
+  }
+
+  function attachIconFallbacks(root) {
+    (root || document).querySelectorAll("img.brand-icon").forEach(function (img) {
+      img.addEventListener(
+        "error",
+        function () {
+          var fallback = document.createElement("i");
+          fallback.setAttribute("data-lucide", "globe");
+          fallback.setAttribute("aria-hidden", "true");
+          img.replaceWith(fallback);
+          refreshIcons();
+        },
+        { once: true }
+      );
+    });
+  }
+
   function socialCardHTML(s) {
     return (
       '<a class="card social-card" href="' + s.url + '" target="_blank" rel="noopener noreferrer">' +
-      '<div class="social-card__icon"><i data-lucide="' + (s.icon || "globe") + '" aria-hidden="true"></i></div>' +
+      '<div class="social-card__icon">' + iconMarkup(s) + "</div>" +
       "<div>" +
       '<div class="social-card__platform">' + escapeHTML(PLATFORM_LABEL[s.platform] || s.platform) + "</div>" +
       '<div class="social-card__handle">' + escapeHTML(s.handle || "") + "</div>" +
@@ -49,6 +81,7 @@
     return (
       '<a href="' + s.url + '" target="_blank" rel="noopener noreferrer" aria-label="' +
       escapeHTML((PLATFORM_LABEL[s.platform] || s.platform) + ": " + (s.handle || "")) + '">' +
+      '<span class="footer-social-icon">' + iconMarkup(s) + "</span>" +
       escapeHTML(PLATFORM_LABEL[s.platform] || s.platform) +
       "</a>"
     );
@@ -68,6 +101,7 @@
     if (emptyState) emptyState.hidden = true;
     grid.innerHTML = socials.map(socialCardHTML).join("");
     refreshIcons();
+    attachIconFallbacks(grid);
   }
 
   function renderFooterSocials(socials) {
@@ -78,6 +112,8 @@
       return;
     }
     host.innerHTML = socials.map(footerSocialHTML).join("");
+    refreshIcons();
+    attachIconFallbacks(host);
   }
 
   function init() {
