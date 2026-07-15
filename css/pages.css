@@ -1,0 +1,162 @@
+/* ==========================================================================
+   NEXO REALM — Page-specific layout
+   ========================================================================== */
+
+/* ---------- Hero (home) ---------- */
+.hero {
+  position: relative;
+  padding-block: calc(var(--nav-h) + var(--space-8)) var(--space-9);
+  overflow: hidden;
+}
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-8);
+  align-items: center;
+}
+@media (min-width: 960px) {
+  .hero__inner { grid-template-columns: 1.1fr 0.9fr; gap: var(--space-7); }
+}
+.hero__title { margin-top: var(--space-4); }
+.hero__title .accent {
+  background: linear-gradient(135deg, var(--red-300), var(--red-500) 60%, var(--red-700));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero__lede { margin-top: var(--space-5); }
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-6); }
+.hero__orbit-wrap { order: -1; }
+@media (min-width: 960px) { .hero__orbit-wrap { order: 2; } }
+
+/* ---------- Section rhythm ---------- */
+.section { padding-block: var(--space-9); }
+.section--tight { padding-block: var(--space-8); }
+.section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-7);
+}
+.section__head h2 { margin-top: var(--space-3); }
+
+/* ---------- Grids ---------- */
+.grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.grid--2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+
+/* ---------- Project card ---------- */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  height: 100%;
+}
+.project-card__top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.project-card__icon {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-m);
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(227,18,33,0.18), rgba(227,18,33,0.04));
+  border: 1px solid var(--border);
+  color: var(--red-400);
+  flex-shrink: 0;
+}
+.project-card__name { font-family: var(--font-display); font-size: var(--step-1); font-weight: 600; }
+.project-card__category { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.08em; }
+.project-card__desc { color: var(--ink-dim); font-size: var(--step--1); flex: 1; }
+.project-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.project-card__footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: var(--space-3); border-top: 1px solid var(--border); }
+.project-card__link { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--step--1); font-weight: 600; color: var(--ink); }
+.project-card__link svg { transition: transform var(--dur-fast) var(--ease-out); }
+.project-card:hover .project-card__link svg { transform: translate(3px, -3px); }
+.project-card--soon { opacity: 0.7; }
+
+/* ---------- Social card ---------- */
+.social-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.social-card__icon {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  color: var(--red-400);
+}
+.social-card__platform { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.08em; }
+.social-card__handle { font-family: var(--font-display); font-weight: 600; }
+
+/* ---------- Featured marquee strip ---------- */
+.marquee-card {
+  flex-shrink: 0;
+  width: 260px;
+  padding: var(--space-5);
+}
+
+/* ---------- Timeline (about) ---------- */
+.timeline { display: flex; flex-direction: column; gap: var(--space-6); border-left: 1px solid var(--border); padding-left: var(--space-6); }
+.timeline__item { position: relative; }
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--space-6) * -1 - 5px);
+  top: 6px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--red-500);
+  box-shadow: 0 0 10px var(--red-500);
+}
+
+/* ---------- Value pillars ---------- */
+.pillar-icon {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-m);
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(227,18,33,0.16), transparent);
+  border: 1px solid var(--border);
+  color: var(--red-400);
+  margin-bottom: var(--space-4);
+}
+
+/* ---------- Contact ---------- */
+.contact-layout {
+  display: grid;
+  gap: var(--space-8);
+}
+@media (min-width: 880px) {
+  .contact-layout { grid-template-columns: 1fr 1fr; }
+}
+.contact-info__item { display: flex; gap: var(--space-4); padding-block: var(--space-4); border-bottom: 1px solid var(--border); }
+.contact-info__icon { color: var(--red-400); flex-shrink: 0; }
+
+/* ---------- Legal pages ---------- */
+.legal {
+  max-width: 74ch;
+}
+.legal h2 { font-size: var(--step-2); margin-top: var(--space-8); margin-bottom: var(--space-4); }
+.legal h2:first-child { margin-top: 0; }
+.legal p, .legal li { color: var(--ink-dim); margin-bottom: var(--space-3); }
+.legal ul { padding-left: 1.4rem; list-style: disc; }
+.legal .updated { font-family: var(--font-mono); font-size: var(--step--1); color: var(--ink-faint); }
+
+/* ---------- Showcase ---------- */
+.showcase-hero-card {
+  position: relative;
+  padding: var(--space-8);
+  overflow: hidden;
+  border-radius: var(--radius-l);
+}

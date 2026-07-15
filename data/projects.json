@@ -1,0 +1,53 @@
+{
+  "_documentation": "Edit the 'projects' array below to manage every card on the Projects and Home pages. Nothing here is hardcoded in HTML. Fields: id (unique slug), name, url, category, icon (a lucide-react icon name, e.g. 'globe', 'search', 'code'), status ('live' | 'beta' | 'soon'), featured (bool — shows on Home + gets a spot in the marquee), title/description (replace the placeholders with real copy when ready), tags (array of short strings).",
+  "projects": [
+    {
+      "id": "app-nexorealm",
+      "name": "Nexo Realm App",
+      "url": "https://app.nexorealm.org",
+      "category": "Replace with category",
+      "icon": "layout-dashboard",
+      "status": "live",
+      "featured": true,
+      "title": "Replace with project title",
+      "description": "Replace with project description",
+      "tags": ["Replace", "with", "tags"]
+    },
+    {
+      "id": "boost-nexorealm",
+      "name": "Nexo Boost",
+      "url": "https://boost.nexorealm.org",
+      "category": "Replace with category",
+      "icon": "trending-up",
+      "status": "live",
+      "featured": true,
+      "title": "Replace with project title",
+      "description": "Replace with project description",
+      "tags": ["Replace", "with", "tags"]
+    },
+    {
+      "id": "list-nexosites",
+      "name": "Nexo List",
+      "url": "https://list.nexosites.xyz",
+      "category": "Replace with category",
+      "icon": "list",
+      "status": "live",
+      "featured": false,
+      "title": "Replace with project title",
+      "description": "Replace with project description",
+      "tags": ["Replace", "with", "tags"]
+    },
+    {
+      "id": "nexosites",
+      "name": "Nexosites",
+      "url": "https://nexosites.xyz",
+      "category": "Replace with category",
+      "icon": "globe",
+      "status": "live",
+      "featured": true,
+      "title": "Replace with project title",
+      "description": "Replace with project description",
+      "tags": ["Replace", "with", "tags"]
+    }
+  ]
+}
