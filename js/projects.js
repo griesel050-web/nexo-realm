@@ -42,30 +42,7 @@
   function statusBadge(p) {
     if (p.status === "beta") return '<span class="badge badge--beta"><span class="orbit-mini"><span class="orbit-mini__dot"></span></span>Beta</span>';
     if (p.status === "soon") return '<span class="badge badge--soon"><span class="orbit-mini"><span class="orbit-mini__dot"></span></span>Coming soon</span>';
-    return (
-      '<span class="badge badge--checking" data-live-badge title="Checking whether this site responds right now&hellip;">' +
-      '<span class="status-dot status-dot--checking" data-status-dot></span>' +
-      '<span data-status-label>Checking</span></span>'
-    );
-  }
-
-  function setLiveStatus(cardOrHost, isUp) {
-    var badge = cardOrHost.querySelector("[data-live-badge]");
-    if (!badge) return;
-    var dot = badge.querySelector("[data-status-dot]");
-    var label = badge.querySelector("[data-status-label]");
-    badge.classList.remove("badge--checking");
-    if (isUp) {
-      badge.classList.add("badge--live");
-      badge.title = "Responded to a live check just now";
-      dot.className = "status-dot status-dot--up";
-      label.textContent = "Online";
-    } else {
-      badge.classList.add("badge--down");
-      badge.title = "Didn't respond to a live check just now — could be temporary";
-      dot.className = "status-dot status-dot--down";
-      label.textContent = "Unreachable";
-    }
+    return '<span class="badge badge--live"><span class="orbit-mini"><span class="orbit-mini__dot"></span></span>Live</span>';
   }
 
   function faviconURL(p) {
@@ -78,25 +55,18 @@
   function attachFaviconFallbacks(root) {
     (root || document).querySelectorAll("img.project-favicon:not([data-fallback-wired])").forEach(function (img) {
       img.setAttribute("data-fallback-wired", "true");
-      var card = img.closest(".project-card, .marquee-card, [data-project-detail]");
-
-      img.addEventListener("load", function () {
-        if (card) setLiveStatus(card, true);
-      });
 
       img.addEventListener(
         "error",
         function () {
-          // The favicon attempt failed — fall back to a generic icon rather
-          // than a third-party "always succeeds with something generic"
-          // service, which just shows the wrong logo instead of a clear
-          // failure. Also mark the card unreachable: no answer at all from
-          // the domain's own favicon.ico is a reasonable (if imperfect)
-          // signal that the site didn't respond.
+          // The favicon attempt failed (no favicon.ico at that path, or the
+          // request was blocked) — fall back to a generic icon. This says
+          // nothing about whether the site is actually up: plenty of live,
+          // healthy sites just don't serve a favicon at the conventional
+          // path, so this is never treated as a "site is down" signal.
           var wrap = document.createElement("span");
           wrap.innerHTML = icon(img.getAttribute("data-fallback-icon") || "globe");
           img.replaceWith(wrap.firstElementChild);
-          if (card) setLiveStatus(card, false);
         },
         { once: false }
       );

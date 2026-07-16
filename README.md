@@ -90,7 +90,7 @@ Each project is one object in the `projects` array:
 }
 ```
 
-- `status`: `"live"`, `"beta"`, or `"soon"`. `"live"` projects get a real-time reachability check instead of a static label (see below).
+- `status`: `"live"`, `"beta"`, or `"soon"` — shown exactly as set, see the note below on why this isn't dynamically checked.
 - `featured`: `true` puts it in the Home marquee/featured grid and the Showcase page.
 - `icon`: a [Lucide](https://lucide.dev/icons/) name — only used as a fallback if the site's real favicon fails to load.
 - `favicon` (optional): an exact favicon URL. By default the site guesses `https://{domain}/favicon.ico` — if a project's icon actually lives somewhere else, set this and it'll be used instead of the guess.
@@ -111,15 +111,9 @@ Supported `platform` values: `discord`, `github`, `youtube`, `tiktok`, `instagra
 
 ---
 
-## Live status indicators
+## Project status
 
-Projects marked `"status": "live"` in `projects.json` no longer show a static "Live" label — they show a real, dynamically-checked status instead:
-
-- **Checking** (pulsing gray dot) while the check is in flight
-- **Online** (green) if the project's own domain responds
-- **Unreachable** (red) if it doesn't
-
-This piggybacks on the same favicon request every card already makes (no extra network call): it tries `{domain}/favicon.ico`, then Google's favicon service, and marks the project reachable the moment either one loads successfully, or unreachable if both fail. It's a lightweight reachability signal, not a full uptime monitor — the badge's tooltip says so — but it's real, not a hardcoded flag. `beta`/`soon` stay as manually-declared labels since they're not something a ping can measure.
+`projects.json`'s `status` field (`"live"`, `"beta"`, or `"soon"`) is shown as-is, manually declared by you. An earlier version of this site tried to dynamically check whether "live" projects were actually reachable, using a project's favicon as a proxy signal. That turned out to be a bad idea and was removed: plenty of live, healthy sites don't serve a favicon at the conventional `/favicon.ico` path, so the check produced false "Unreachable" labels on sites that were completely fine. A static site's JavaScript has no CORS-safe way to read a real HTTP status from an arbitrary third-party domain — there's no reliable client-side substitute for an actual uptime monitor — so rather than keep a heuristic that looked confident but was often just wrong, the status field is back to being exactly what you put in the JSON.
 
 ## Changelog / What's new
 
