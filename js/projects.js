@@ -23,7 +23,7 @@
   }
 
   function icon(name, attrs) {
-    attrs = attrs || "";
+    attrs = attrs || ' width="16" height="16"';
     return (
       '<svg class="icon" aria-hidden="true"' + attrs + '><use href="' + ASSET_PREFIX +
       'icons/lucide-sprite.svg#' + name + '"></use></svg>'
@@ -68,12 +68,11 @@
     }
   }
 
-  function faviconURL(url, tier) {
-    var host = hostname(url);
-    if (tier === 2) return "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(host);
-    // Tier 1: ask the site itself first — first-party, not subject to
-    // third-party tracker blocklists that sometimes catch favicon CDNs.
-    return "https://" + host + "/favicon.ico";
+  function faviconURL(p) {
+    // An explicit "favicon" field in projects.json always wins — useful when
+    // a site doesn't serve /favicon.ico at the conventional path.
+    if (p.favicon) return p.favicon;
+    return "https://" + hostname(p.url) + "/favicon.ico";
   }
 
   function attachFaviconFallbacks(root) {
@@ -88,18 +87,12 @@
       img.addEventListener(
         "error",
         function () {
-          var tier = parseInt(img.getAttribute("data-favicon-tier") || "1", 10);
-          if (tier === 1) {
-            // First attempt (the domain's own favicon.ico) failed — try
-            // Google's favicon service as a second, still-real-logo attempt.
-            img.setAttribute("data-favicon-tier", "2");
-            img.src = faviconURL(img.getAttribute("data-project-url"), 2);
-            return;
-          }
-          // Both real-favicon attempts failed — fall back to a generic icon
-          // and mark the card unreachable (a missing favicon.ico on both the
-          // domain itself and Google's cache usually means the domain didn't
-          // respond at all, not just that it lacks a favicon).
+          // The favicon attempt failed — fall back to a generic icon rather
+          // than a third-party "always succeeds with something generic"
+          // service, which just shows the wrong logo instead of a clear
+          // failure. Also mark the card unreachable: no answer at all from
+          // the domain's own favicon.ico is a reasonable (if imperfect)
+          // signal that the site didn't respond.
           var wrap = document.createElement("span");
           wrap.innerHTML = icon(img.getAttribute("data-fallback-icon") || "globe");
           img.replaceWith(wrap.firstElementChild);
@@ -112,7 +105,7 @@
 
   function faviconImgHTML(p) {
     return (
-      '<img class="project-favicon" src="' + faviconURL(p.url, 1) + '" data-favicon-tier="1" data-project-url="' +
+      '<img class="project-favicon" src="' + faviconURL(p) + '" data-project-url="' +
       escapeHTML(p.url) + '" data-fallback-icon="' + (p.icon || "globe") + '" alt="" width="28" height="28" loading="lazy" />'
     );
   }

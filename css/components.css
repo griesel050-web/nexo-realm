@@ -30,6 +30,15 @@
 
 @media (min-width: 720px) { .nav__inner { padding-inline: var(--space-7); } }
 
+@media (min-width: 900px) {
+  .nav__inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-6);
+  }
+}
+
 .nav__brand {
   display: flex;
   align-items: center;
@@ -40,11 +49,14 @@
   letter-spacing: -0.01em;
   margin-right: auto;
 }
+@media (min-width: 900px) { .nav__brand { margin-right: 0; } }
 .nav__brand img { height: 28px; width: auto; }
+.nav__brand-text { color: var(--ink); }
 
 .nav__links {
   display: none;
   align-items: center;
+  justify-content: center;
   gap: var(--space-6);
   position: relative;
 }
@@ -271,7 +283,7 @@
   color: var(--ink-faint);
   margin-bottom: var(--space-4);
 }
-.footer__col a, .footer__col span {
+.footer__col a, .footer__col .footer__empty-note {
   display: block;
   color: var(--ink-dim);
   padding: var(--space-2) 0;

@@ -64,7 +64,7 @@ Every icon on this site renders from files shipped in this repo — nothing is l
 
 1. **UI icons** (nav, theme toggle, buttons, pillars, arrows, search, etc.) are `<svg><use></svg>` references into `/icons/lucide-sprite.svg` — a single small SVG file trimmed to just the ~20 icons this site actually uses, built from [Lucide](https://lucide.dev) (ISC license, `icons/LUCIDE-LICENSE.txt`). These render immediately on page load with zero JavaScript required.
 2. **Social brand marks** (Discord, YouTube, TikTok, etc.) are inlined directly as `<path>` data in `js/brand-icons.js`, sourced from [Simple Icons](https://simpleicons.org) (CC0 license). No image request, no CDN — the SVG paints the instant the card renders. LinkedIn's mark was removed from Simple Icons after a takedown request, so it falls back to a generic sprite icon instead.
-3. **Project favicons** (project cards, marquee) are the one place that still reaches out to the network, since we're pulling *their* real, live favicon: it tries the project's own `https://{domain}/favicon.ico` first, then Google's favicon service as a second attempt, then finally a generic sprite icon if both fail.
+3. **Project favicons** (project cards, marquee, detail pages) are the one place that still reaches out to the network, since we're pulling *their* real, live favicon: it tries `favicon` from `projects.json` if set, otherwise guesses `https://{domain}/favicon.ico`, then falls back to a generic sprite icon if that fails. (An earlier version also tried Google's favicon service as a second attempt — removed, because Google's service almost never actually fails: it returns a generic placeholder image even for domains with no favicon, which silently showed the wrong logo instead of a clear failure.)
 
 To add a new UI icon: find its name at [lucide.dev/icons](https://lucide.dev/icons), then add its `<symbol>` block from `lucide-static`'s full sprite into `icons/lucide-sprite.svg`. To add a new social brand: pull its `{ hex, path }` from the `simple-icons` npm package into `js/brand-icons.js`.
 
@@ -81,6 +81,7 @@ Each project is one object in the `projects` array:
   "url": "https://example.com",
   "category": "Tools",
   "icon": "layout-dashboard",
+  "favicon": "",
   "status": "live",
   "featured": true,
   "title": "Optional longer title",
@@ -89,9 +90,10 @@ Each project is one object in the `projects` array:
 }
 ```
 
-- `status`: `"live"`, `"beta"`, or `"soon"`.
+- `status`: `"live"`, `"beta"`, or `"soon"`. `"live"` projects get a real-time reachability check instead of a static label (see below).
 - `featured`: `true` puts it in the Home marquee/featured grid and the Showcase page.
 - `icon`: a [Lucide](https://lucide.dev/icons/) name — only used as a fallback if the site's real favicon fails to load.
+- `favicon` (optional): an exact favicon URL. By default the site guesses `https://{domain}/favicon.ico` — if a project's icon actually lives somewhere else, set this and it'll be used instead of the guess.
 - Categories are read automatically — add a new one and a filter chip appears on `/projects/` with no other changes needed.
 
 ## Editing `data/socials.json`

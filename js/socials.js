@@ -103,7 +103,7 @@
     var host = document.querySelector("[data-footer-socials]");
     if (!host) return;
     if (!socials.length) {
-      host.innerHTML = "<span>None added yet</span>";
+      host.innerHTML = '<span class="footer__empty-note">None added yet</span>';
       return;
     }
     host.innerHTML = socials.map(footerSocialHTML).join("");
