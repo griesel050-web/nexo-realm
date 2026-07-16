@@ -205,33 +205,7 @@
     });
   }
 
-  /* ---------- Lucide icons ---------- */
-  // projects.js / socials.js already re-run this after injecting dynamic
-  // cards, but static icons (nav theme toggle, mobile menu, hero, pillars,
-  // etc.) exist on every page and were previously only rendered as a side
-  // effect of a data fetch — meaning pages with no project/social hooks
-  // (About, the 404 page, ...) never got their icons drawn at all.
-  function initIcons() {
-    if (window.lucide && typeof window.lucide.createIcons === "function") {
-      window.lucide.createIcons();
-    } else {
-      // Lucide loads with `defer` and should already be present by the time
-      // DOMContentLoaded fires, but if it's ever slow, retry briefly.
-      var attempts = 0;
-      var timer = setInterval(function () {
-        attempts++;
-        if (window.lucide && typeof window.lucide.createIcons === "function") {
-          window.lucide.createIcons();
-          clearInterval(timer);
-        } else if (attempts > 20) {
-          clearInterval(timer);
-        }
-      }, 100);
-    }
-  }
-
   function init() {
-    initIcons();
     initNavScrollState();
     initMobileMenu();
     initScrollReveal();

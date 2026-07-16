@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About — Nexo Realm</title>
-  <meta name="description" content="Nexo Realm is the ecosystem hub connecting every current and future Nexo project. Learn the vision and the principles behind it." />
+  <title>Changelog — Nexo Realm</title>
+  <meta name="description" content="What's new across every Nexo project — generated live from a single JSON file, newest first." />
   <meta name="keywords" content="Nexo Realm, Nexoria Network, Nexo Hub, Next Boost, Watch Log, Nexo Sites, indie developer tools, project hub, developer ecosystem" />
   <meta name="author" content="Nexo Realm" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <link rel="canonical" href="https://nexorealm.org/about/" />
+  <link rel="canonical" href="https://nexorealm.org/changelog/" />
   <meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)" />
   <meta name="format-detection" content="telephone=no" />
@@ -29,9 +29,9 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Nexo Realm" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="About — Nexo Realm" />
-  <meta property="og:description" content="Nexo Realm is the ecosystem hub connecting every current and future Nexo project. Learn the vision and the principles behind it." />
-  <meta property="og:url" content="https://nexorealm.org/about/" />
+  <meta property="og:title" content="Changelog — Nexo Realm" />
+  <meta property="og:description" content="What's new across every Nexo project — generated live from a single JSON file, newest first." />
+  <meta property="og:url" content="https://nexorealm.org/changelog/" />
   <meta property="og:image" content="https://nexorealm.org/images/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -39,8 +39,8 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="About — Nexo Realm" />
-  <meta name="twitter:description" content="Nexo Realm is the ecosystem hub connecting every current and future Nexo project. Learn the vision and the principles behind it." />
+  <meta name="twitter:title" content="Changelog — Nexo Realm" />
+  <meta name="twitter:description" content="What's new across every Nexo project — generated live from a single JSON file, newest first." />
   <meta name="twitter:image" content="https://nexorealm.org/images/og-image.jpg" />
 
   <!-- Preconnect -->
@@ -104,8 +104,8 @@
         <a class="nav__link" href="../projects/">Projects</a>
         <a class="nav__link" href="../socials/">Socials</a>
         <a class="nav__link" href="../showcase/">Showcase</a>
-        <a class="nav__link" href="../changelog/">Changelog</a>
-        <a class="nav__link" href="../about/" aria-current="page">About</a>
+        <a class="nav__link" href="../changelog/" aria-current="page">Changelog</a>
+        <a class="nav__link" href="../about/">About</a>
       </nav>
       <div class="nav__actions">
         <button class="theme-toggle" data-theme-toggle type="button" aria-label="Toggle color theme" aria-pressed="false">
@@ -125,8 +125,8 @@
       <a class="mobile-menu__link" href="../projects/">Projects</a>
       <a class="mobile-menu__link" href="../socials/">Socials</a>
       <a class="mobile-menu__link" href="../showcase/">Showcase</a>
-      <a class="mobile-menu__link" href="../changelog/">Changelog</a>
-      <a class="mobile-menu__link" href="../about/" aria-current="page">About</a>
+      <a class="mobile-menu__link" href="../changelog/" aria-current="page">Changelog</a>
+      <a class="mobile-menu__link" href="../about/">About</a>
     <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
       <a class="btn btn--primary" href="../projects/">Explore projects</a>
       <a class="btn btn--ghost" href="../socials/">Socials</a>
@@ -137,64 +137,20 @@
 
     <section class="page-hero">
       <div class="container">
-        <span class="eyebrow">About</span>
-        <h1>An ecosystem,<br />not a single app.</h1>
-        <p class="lede">Nexo Realm exists because good ideas rarely arrive one at a time. It's the constant underneath a growing set of tools, apps, and experiments &mdash; the one address that never changes even as everything built on top of it does.</p>
+        <span class="eyebrow">Changelog</span>
+        <h1>What's new<br />in the realm.</h1>
+        <p class="lede">Every entry here is generated from <code>data/changelog.json</code> — newest first, no fixed release schedule, just what actually shipped.</p>
       </div>
     </section>
 
     <section class="section section--tight">
       <div class="container">
-        <div class="grid grid--2 reveal-stagger">
-          <div class="card">
-            <div class="pillar-icon"><svg class="icon" aria-hidden="true" width="20" height="20"><use href="../icons/lucide-sprite.svg#rocket"></use></svg></div>
-            <h4>The vision</h4>
-            <p class="lede" style="margin-top:.75rem;">Every new Nexo project gets a home here from day one &mdash; whether it's a full web app, a small utility, or something still taking shape. Nexo Realm is the map; the projects are the territory.</p>
-          </div>
-          <div class="card">
-            <div class="pillar-icon"><svg class="icon" aria-hidden="true" width="20" height="20"><use href="../icons/lucide-sprite.svg#code"></use></svg></div>
-            <h4>How it's built</h4>
-            <p class="lede" style="margin-top:.75rem;">Static HTML, CSS, and JavaScript, driven entirely by JSON data files. No build step, no framework lock-in &mdash; just a site that's as easy to extend as it is to load.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+        <div class="timeline" data-changelog-timeline hidden></div>
 
-    <section class="section">
-      <div class="container">
-        <div class="section__head reveal">
-          <div>
-            <span class="eyebrow">Principles</span>
-            <h2>What stays true as the realm grows</h2>
-          </div>
-        </div>
-        <div class="grid grid--3 reveal-stagger">
-          <div class="card">
-            <div class="pillar-icon"><svg class="icon" aria-hidden="true" width="20" height="20"><use href="../icons/lucide-sprite.svg#shield-check"></use></svg></div>
-            <h4>Real data only</h4>
-            <p class="lede" style="margin-top:.75rem;">If a project, stat, or account isn't real yet, it doesn't appear here. Honest &ldquo;coming soon&rdquo; beats a filled-in placeholder every time.</p>
-          </div>
-          <div class="card">
-            <div class="pillar-icon"><svg class="icon" aria-hidden="true" width="20" height="20"><use href="../icons/lucide-sprite.svg#layers"></use></svg></div>
-            <h4>Everything editable in JSON</h4>
-            <p class="lede" style="margin-top:.75rem;">Projects and socials live in data files, not markup. Adding to the ecosystem should never mean rewriting a page.</p>
-          </div>
-          <div class="card">
-            <div class="pillar-icon"><svg class="icon" aria-hidden="true" width="20" height="20"><use href="../icons/lucide-sprite.svg#sparkles"></use></svg></div>
-            <h4>Built to last</h4>
-            <p class="lede" style="margin-top:.75rem;">Free-tier infrastructure, lightweight code, and no dependencies that could disappear tomorrow.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--tight">
-      <div class="container">
-        <div class="card card--glass showcase-hero-card reveal" style="text-align:center;">
-          <h2>Want to see what's live right now?</h2>
-          <div class="hero__actions" style="justify-content:center;margin-top:1.5rem;">
-            <a class="btn btn--primary" href="../projects/">Browse projects <svg class="icon" aria-hidden="true" width="16" height="16"><use href="../icons/lucide-sprite.svg#arrow-up-right"></use></svg></a>
-          </div>
+        <div class="empty-state" data-changelog-empty>
+          <svg class="icon" aria-hidden="true" width="20" height="20"><use href="../icons/lucide-sprite.svg#compass"></use></svg>
+          <p><strong>No updates logged yet.</strong></p>
+          <p class="lede" style="margin-inline:auto;">This page reads directly from <code>data/changelog.json</code>. Add an entry to the <code>entries</code> array — <code>{ "date": "2026-07-16", "title": "&hellip;", "description": "&hellip;", "tags": ["&hellip;"] }</code> — and it shows up here automatically, newest first.</p>
         </div>
       </div>
     </section>

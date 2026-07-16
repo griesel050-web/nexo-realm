@@ -1,10 +1,13 @@
 # /icons/
 
-This project uses Lucide icons loaded from a CDN — see the `<script>` tag near
-the bottom of every page, plus `data-lucide="..."` attributes throughout the
-HTML and in `js/projects.js` / `js/socials.js`. No local icon files are needed
-for the site to work.
+- `lucide-sprite.svg` — a self-hosted SVG sprite containing only the ~20 icons this site actually uses, trimmed from the full [Lucide](https://lucide.dev) icon set. Referenced throughout the site as `<svg class="icon" width="N" height="N"><use href="icons/lucide-sprite.svg#name"></use></svg>`. No CDN, no JavaScript library required — it renders the instant the page loads.
+- `LUCIDE-LICENSE.txt` — Lucide's ISC license, included for attribution.
 
-If you'd rather self-host icons (no CDN dependency), download individual SVGs
-from https://lucide.dev/icons/ into this folder and swap `<i data-lucide="name">`
-elements for `<img src="/icons/name.svg" alt="">` or inline SVG markup.
+Social brand marks (Discord, YouTube, etc.) live separately in `/js/brand-icons.js` as inline SVG path data from Simple Icons, not here.
+
+## Adding a new UI icon
+
+1. Find the icon's name at https://lucide.dev/icons.
+2. Get its `<symbol>` markup — the easiest way is `npm install lucide-static` and copy the matching block out of `node_modules/lucide-static/sprite.svg`.
+3. Paste that `<symbol>` block inside the `<defs>` in `lucide-sprite.svg`.
+4. Reference it anywhere: `<svg class="icon" width="20" height="20"><use href="icons/lucide-sprite.svg#your-icon-name"></use></svg>` (use `../icons/...` from any page one folder deep).

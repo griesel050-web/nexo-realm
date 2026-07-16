@@ -11,8 +11,13 @@ nexorealm/
 ├── index.html              Home
 ├── about/index.html        About
 ├── projects/index.html     Projects (search/filter/sort)
+│   ├── app-nexorealm/      Individual project detail page
+│   ├── boost-nexorealm/    Individual project detail page
+│   ├── list-nexosites/     Individual project detail page
+│   └── nexosites/          Individual project detail page
 ├── socials/index.html      Socials
 ├── showcase/index.html     Showcase
+├── changelog/index.html    What's new — generated from data/changelog.json
 ├── 404.html                Cloudflare's auto-detected 404 page
 ├── 404/index.html          Same 404 page at a clean /404/ URL
 ├── css/
@@ -23,12 +28,18 @@ nexorealm/
 │   └── pages.css           Page-specific layout (hero, grids, sections)
 ├── js/
 │   ├── theme.js            Dark/light toggle (localStorage)
-│   ├── main.js              Nav, mobile menu, reveals, counters, ripple, icons
-│   ├── projects.js         Renders project cards from data/projects.json
-│   └── socials.js          Renders social cards from data/socials.json
+│   ├── main.js              Nav, mobile menu, reveals, counters, ripple
+│   ├── brand-icons.js      Self-hosted social brand icon SVG path data
+│   ├── projects.js         Project cards, live status check, detail pages
+│   ├── socials.js          Renders social cards from data/socials.json
+│   └── changelog.js        Renders the changelog + Home's updates strip
+├── icons/
+│   ├── lucide-sprite.svg   Self-hosted UI icon sprite (trimmed Lucide subset)
+│   └── LUCIDE-LICENSE.txt  Lucide's ISC license
 ├── data/
 │   ├── projects.json       Every project card — edit this, not the HTML
-│   └── socials.json        Every social link — edit this, not the HTML
+│   ├── socials.json        Every social link — edit this, not the HTML
+│   └── changelog.json      Every changelog entry — edit this, not the HTML
 ├── images/
 │   ├── logo.png            Nav/footer logo (cropped from your upload)
 │   ├── og-image.jpg        Social share preview image
@@ -47,15 +58,15 @@ The Contact, Privacy Policy, and Terms of Service pages have been removed, along
 
 ---
 
-## Icons — how they actually load
+## Icons — fully self-hosted, no CDN
 
-Three different icon sources are in play, on purpose:
+Every icon on this site renders from files shipped in this repo — nothing is loaded from a third-party icon CDN, so nothing can be blocked by an ad-blocker, fail from a slow CDN, or race against a script tag that hasn't finished loading yet (all real bugs the earlier CDN-based version hit).
 
-1. **Project cards & the marquee** pull each project's **real favicon** live from `https://www.google.com/s2/favicons?domain=...` — not a generic icon. If a favicon ever fails to load, it falls back to a small Lucide icon (the `icon` field in `projects.json`).
-2. **Social cards & footer links** use real **brand logos** from [Simple Icons](https://simpleicons.org) (`cdn.simpleicons.org`), since Lucide doesn't carry brand marks like Discord or TikTok. Same fallback pattern if one 404s.
-3. **Everything else** (nav theme toggle, menu button, arrows, search, pillar icons, etc.) uses **Lucide**, loaded from `unpkg.com` and rendered by `js/main.js` on every single page load — this used to only run on pages that also fetched project/social data, which is why icons were missing on About and a few other pages. Fixed now: `initIcons()` runs unconditionally.
+1. **UI icons** (nav, theme toggle, buttons, pillars, arrows, search, etc.) are `<svg><use></svg>` references into `/icons/lucide-sprite.svg` — a single small SVG file trimmed to just the ~20 icons this site actually uses, built from [Lucide](https://lucide.dev) (ISC license, `icons/LUCIDE-LICENSE.txt`). These render immediately on page load with zero JavaScript required.
+2. **Social brand marks** (Discord, YouTube, TikTok, etc.) are inlined directly as `<path>` data in `js/brand-icons.js`, sourced from [Simple Icons](https://simpleicons.org) (CC0 license). No image request, no CDN — the SVG paints the instant the card renders. LinkedIn's mark was removed from Simple Icons after a takedown request, so it falls back to a generic sprite icon instead.
+3. **Project favicons** (project cards, marquee) are the one place that still reaches out to the network, since we're pulling *their* real, live favicon: it tries the project's own `https://{domain}/favicon.ico` first, then Google's favicon service as a second attempt, then finally a generic sprite icon if both fail.
 
-All three depend on outbound network access from the visitor's browser (Google's favicon service, Simple Icons' CDN, unpkg, Google Fonts) — normal for any live site, but they won't resolve if you preview this in a fully offline sandbox.
+To add a new UI icon: find its name at [lucide.dev/icons](https://lucide.dev/icons), then add its `<symbol>` block from `lucide-static`'s full sprite into `icons/lucide-sprite.svg`. To add a new social brand: pull its `{ hex, path }` from the `simple-icons` npm package into `js/brand-icons.js`.
 
 ---
 
@@ -95,6 +106,32 @@ Each project is one object in the `projects` array:
 ```
 
 Supported `platform` values: `discord`, `github`, `youtube`, `tiktok`, `instagram`, `facebook`, `x`, `reddit`, `linkedin`, `twitch`, `email` (use `url: "mailto:you@example.com"`), `website`. The `icon` field should be a [Simple Icons](https://simpleicons.org) slug (matches the platform name in almost every case).
+
+---
+
+## Live status indicators
+
+Projects marked `"status": "live"` in `projects.json` no longer show a static "Live" label — they show a real, dynamically-checked status instead:
+
+- **Checking** (pulsing gray dot) while the check is in flight
+- **Online** (green) if the project's own domain responds
+- **Unreachable** (red) if it doesn't
+
+This piggybacks on the same favicon request every card already makes (no extra network call): it tries `{domain}/favicon.ico`, then Google's favicon service, and marks the project reachable the moment either one loads successfully, or unreachable if both fail. It's a lightweight reachability signal, not a full uptime monitor — the badge's tooltip says so — but it's real, not a hardcoded flag. `beta`/`soon` stay as manually-declared labels since they're not something a ping can measure.
+
+## Changelog / What's new
+
+`/changelog/` and a "Latest updates" strip on Home are both generated from `data/changelog.json`, newest-first. It ships empty on purpose (see its `_documentation` key) — add an entry as you actually ship something:
+
+```json
+{ "date": "2026-07-16", "title": "Added Nexo Rank", "description": "A free SEO monitoring dashboard.", "tags": ["Nexo Rank", "New project"] }
+```
+
+The Home strip and the nav/footer "Changelog" link both stay hidden until at least one entry exists — no fake "coming soon" placeholder.
+
+## Individual project pages
+
+Every project in `projects.json` now gets its own page at `/projects/{id}/` — e.g. `/projects/app-nexorealm/` — generated at build time from the same JSON (see `pages_project_detail.py`). Each one has its own unique title/meta description/canonical URL (better for SEO than one shared card), the same live favicon + status check, and a "Visit" button linking out to the real site. Project card names on `/projects/`, Home, and Showcase now link to these pages; the external "Visit" link on each card still goes straight to the live site.
 
 ---
 

@@ -71,6 +71,7 @@
   flex-shrink: 0;
 }
 .project-card__name { font-family: var(--font-display); font-size: var(--step-1); font-weight: 600; }
+.project-card__name a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .project-card__category { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.08em; }
 .project-card__desc { color: var(--ink-dim); font-size: var(--step--1); flex: 1; }
 .project-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
@@ -96,13 +97,9 @@
   flex-shrink: 0;
   color: var(--red-400);
 }
-.social-card__icon img.brand-icon { width: 22px; height: 22px; object-fit: contain; }
+.social-card__icon svg.brand-icon { width: 22px; height: 22px; }
 .social-card__platform { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.08em; }
 .social-card__handle { font-family: var(--font-display); font-weight: 600; }
-
-/* TikTok's Simple Icons mark is solid black — invert it in dark mode so it
-   doesn't disappear against the dark card background. */
-[data-theme="dark"] .brand-icon[src*="tiktok"] { filter: invert(1); }
 
 .footer-social-icon {
   display: inline-flex;
@@ -110,10 +107,7 @@
   margin-right: 0.5em;
   vertical-align: -3px;
 }
-.footer-social-icon img, .footer-social-icon i {
-  width: 15px; height: 15px;
-}
-[data-theme="dark"] .footer-social-icon img[src*="tiktok"] { filter: invert(1); }
+.footer-social-icon svg { width: 15px; height: 15px; }
 
 /* ---------- Featured marquee strip ---------- */
 .marquee-card {
@@ -123,7 +117,7 @@
 }
 
 /* ---------- Timeline (about) ---------- */
-.timeline { display: flex; flex-direction: column; gap: var(--space-6); border-left: 1px solid var(--border); padding-left: var(--space-6); }
+.timeline { display: flex; flex-direction: column; gap: var(--space-7); border-left: 1px solid var(--border); padding-left: var(--space-6); }
 .timeline__item { position: relative; }
 .timeline__item::before {
   content: "";
@@ -135,6 +129,13 @@
   background: var(--red-500);
   box-shadow: 0 0 10px var(--red-500);
 }
+.timeline__date { font-family: var(--font-mono); font-size: var(--step--1); color: var(--ink-faint); letter-spacing: 0.04em; margin-bottom: var(--space-2); }
+.timeline__title { font-size: var(--step-2); }
+.timeline__desc { color: var(--ink-dim); margin-top: var(--space-2); max-width: 60ch; }
+.timeline__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+
+/* ---------- Latest updates strip (Home) ---------- */
+.update-card__date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--space-2); }
 
 /* ---------- Value pillars ---------- */
 .pillar-icon {

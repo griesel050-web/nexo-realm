@@ -3,48 +3,118 @@
  * Renders: home "featured" grid + marquee + stats counters, and the full
  * Projects page grid with live search, category filter, and sorting.
  * Nothing here is hardcoded — add a project by editing the JSON only.
+ *
+ * Icons are self-hosted SVG sprite references (see /icons/lucide-sprite.svg)
+ * rather than a JS icon library — this renders instantly with zero network
+ * dependency and can't be blocked by an ad-blocker or CDN hiccup.
  */
 (function () {
   "use strict";
 
-  var DATA_URL = getDataPath("data/projects.json");
+  var ASSET_PREFIX = getAssetPrefix();
+  var DATA_URL = ASSET_PREFIX + "data/projects.json";
 
-  function getDataPath(rel) {
-    // Pages live at /, /projects/, /about/, etc. so the JSON is always
+  function getAssetPrefix() {
+    // Pages live at /, /projects/, /about/, etc. so every shared asset is
     // one level up from any non-root page.
     var depth = window.location.pathname.split("/").filter(Boolean);
     var isRoot = depth.length === 0 || (depth.length === 1 && depth[0].includes("."));
-    return (isRoot ? "" : "../") + rel;
+    return isRoot ? "" : "../";
   }
 
-  function statusBadge(status) {
-    var map = {
-      live: { cls: "badge--live", label: "Live" },
-      beta: { cls: "badge--beta", label: "Beta" },
-      soon: { cls: "badge--soon", label: "Coming soon" }
-    };
-    var m = map[status] || { cls: "", label: status };
-    return '<span class="badge ' + m.cls + '"><span class="orbit-mini"><span class="orbit-mini__dot"></span></span>' + m.label + "</span>";
+  function icon(name, attrs) {
+    attrs = attrs || "";
+    return (
+      '<svg class="icon" aria-hidden="true"' + attrs + '><use href="' + ASSET_PREFIX +
+      'icons/lucide-sprite.svg#' + name + '"></use></svg>'
+    );
   }
 
-  function faviconURL(url) {
-    return "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(hostname(url));
+  /**
+   * "Live" status is checked for real, not just declared in JSON: it piggy-
+   * backs on the favicon request every card already makes (no extra network
+   * call). If the project's own domain answers, it's marked Online; if both
+   * favicon attempts fail, it's marked Unreachable. This is a lightweight
+   * reachability signal, not a full uptime monitor — the badge's tooltip
+   * says so plainly. `beta`/`soon` stay as manually-declared labels since
+   * they're not something a ping can measure.
+   */
+  function statusBadge(p) {
+    if (p.status === "beta") return '<span class="badge badge--beta"><span class="orbit-mini"><span class="orbit-mini__dot"></span></span>Beta</span>';
+    if (p.status === "soon") return '<span class="badge badge--soon"><span class="orbit-mini"><span class="orbit-mini__dot"></span></span>Coming soon</span>';
+    return (
+      '<span class="badge badge--checking" data-live-badge title="Checking whether this site responds right now&hellip;">' +
+      '<span class="status-dot status-dot--checking" data-status-dot></span>' +
+      '<span data-status-label>Checking</span></span>'
+    );
+  }
+
+  function setLiveStatus(cardOrHost, isUp) {
+    var badge = cardOrHost.querySelector("[data-live-badge]");
+    if (!badge) return;
+    var dot = badge.querySelector("[data-status-dot]");
+    var label = badge.querySelector("[data-status-label]");
+    badge.classList.remove("badge--checking");
+    if (isUp) {
+      badge.classList.add("badge--live");
+      badge.title = "Responded to a live check just now";
+      dot.className = "status-dot status-dot--up";
+      label.textContent = "Online";
+    } else {
+      badge.classList.add("badge--down");
+      badge.title = "Didn't respond to a live check just now — could be temporary";
+      dot.className = "status-dot status-dot--down";
+      label.textContent = "Unreachable";
+    }
+  }
+
+  function faviconURL(url, tier) {
+    var host = hostname(url);
+    if (tier === 2) return "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(host);
+    // Tier 1: ask the site itself first — first-party, not subject to
+    // third-party tracker blocklists that sometimes catch favicon CDNs.
+    return "https://" + host + "/favicon.ico";
   }
 
   function attachFaviconFallbacks(root) {
-    (root || document).querySelectorAll("img.project-favicon").forEach(function (img) {
+    (root || document).querySelectorAll("img.project-favicon:not([data-fallback-wired])").forEach(function (img) {
+      img.setAttribute("data-fallback-wired", "true");
+      var card = img.closest(".project-card, .marquee-card, [data-project-detail]");
+
+      img.addEventListener("load", function () {
+        if (card) setLiveStatus(card, true);
+      });
+
       img.addEventListener(
         "error",
         function () {
-          var fallback = document.createElement("i");
-          fallback.setAttribute("data-lucide", img.getAttribute("data-fallback-icon") || "globe");
-          fallback.setAttribute("aria-hidden", "true");
-          img.replaceWith(fallback);
-          refreshIcons();
+          var tier = parseInt(img.getAttribute("data-favicon-tier") || "1", 10);
+          if (tier === 1) {
+            // First attempt (the domain's own favicon.ico) failed — try
+            // Google's favicon service as a second, still-real-logo attempt.
+            img.setAttribute("data-favicon-tier", "2");
+            img.src = faviconURL(img.getAttribute("data-project-url"), 2);
+            return;
+          }
+          // Both real-favicon attempts failed — fall back to a generic icon
+          // and mark the card unreachable (a missing favicon.ico on both the
+          // domain itself and Google's cache usually means the domain didn't
+          // respond at all, not just that it lacks a favicon).
+          var wrap = document.createElement("span");
+          wrap.innerHTML = icon(img.getAttribute("data-fallback-icon") || "globe");
+          img.replaceWith(wrap.firstElementChild);
+          if (card) setLiveStatus(card, false);
         },
-        { once: true }
+        { once: false }
       );
     });
+  }
+
+  function faviconImgHTML(p) {
+    return (
+      '<img class="project-favicon" src="' + faviconURL(p.url, 1) + '" data-favicon-tier="1" data-project-url="' +
+      escapeHTML(p.url) + '" data-fallback-icon="' + (p.icon || "globe") + '" alt="" width="28" height="28" loading="lazy" />'
+    );
   }
 
   function cardHTML(p) {
@@ -59,17 +129,17 @@
       '<article class="card project-card' + (isSoon ? " project-card--soon" : "") + '" data-name="' + escapeHTML(p.name.toLowerCase()) +
       '" data-category="' + escapeHTML((p.category || "").toLowerCase()) + '" data-status="' + p.status + '">' +
       '<div class="project-card__top">' +
-      '<div class="project-card__icon"><img class="project-favicon" src="' + faviconURL(p.url) + '" data-fallback-icon="' + (p.icon || "globe") + '" alt="" width="28" height="28" loading="lazy" /></div>' +
-      statusBadge(p.status) +
+      '<div class="project-card__icon">' + faviconImgHTML(p) + "</div>" +
+      statusBadge(p) +
       "</div>" +
-      '<div><div class="project-card__name">' + escapeHTML(p.name) + '</div><div class="project-card__category">' + escapeHTML(p.category || "") + "</div></div>" +
+      '<div><div class="project-card__name"><a href="' + ASSET_PREFIX + 'projects/' + escapeHTML(p.id) + '/">' + escapeHTML(p.name) + '</a></div><div class="project-card__category">' + escapeHTML(p.category || "") + "</div></div>" +
       '<p class="project-card__desc">' + escapeHTML(p.description || "") + "</p>" +
       '<div class="project-card__tags">' + tags + "</div>" +
       '<div class="project-card__footer">' +
       '<span class="tag" style="border:none;padding:0;color:var(--ink-faint)">' + escapeHTML(hostname(p.url)) + "</span>" +
       (isSoon
-        ? '<span class="project-card__link" aria-disabled="true">Notify me <i data-lucide="bell" aria-hidden="true"></i></span>'
-        : '<a class="project-card__link" href="' + href + '"' + linkAttrs + '>Visit <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>') +
+        ? '<span class="project-card__link" aria-disabled="true">Notify me ' + icon("bell") + "</span>"
+        : '<a class="project-card__link" href="' + href + '"' + linkAttrs + ">Visit " + icon("arrow-up-right") + "</a>") +
       "</div>" +
       "</article>"
     );
@@ -83,12 +153,6 @@
     var div = document.createElement("div");
     div.textContent = str == null ? "" : String(str);
     return div.innerHTML;
-  }
-
-  function refreshIcons() {
-    if (window.lucide && typeof window.lucide.createIcons === "function") {
-      window.lucide.createIcons();
-    }
   }
 
   function renderHome(projects) {
@@ -107,7 +171,7 @@
         .map(function (p) {
           return (
             '<div class="card card--glass marquee-card">' +
-            '<div class="project-card__icon" style="margin-bottom:12px"><img class="project-favicon" src="' + faviconURL(p.url) + '" data-fallback-icon="' + (p.icon || "globe") + '" alt="" width="28" height="28" loading="lazy" /></div>' +
+            '<div class="project-card__icon" style="margin-bottom:12px">' + faviconImgHTML(p) + "</div>" +
             '<div class="project-card__name">' + escapeHTML(p.name) + "</div>" +
             '<div class="project-card__category">' + escapeHTML(p.category || "") + "</div>" +
             "</div>"
@@ -118,7 +182,6 @@
     if (statProjects) statProjects.setAttribute("data-counter", String(projects.length));
     if (statLive) statLive.setAttribute("data-counter", String(projects.filter(function (p) { return p.status === "live"; }).length));
 
-    refreshIcons();
     attachFaviconFallbacks();
     document.dispatchEvent(new CustomEvent("nexo:counters-ready"));
   }
@@ -157,7 +220,6 @@
       grid.innerHTML = filtered.map(cardHTML).join("");
       grid.classList.toggle("visually-hidden", filtered.length === 0);
       if (emptyState) emptyState.hidden = filtered.length !== 0;
-      refreshIcons();
       attachFaviconFallbacks(grid);
     }
 
@@ -191,7 +253,6 @@
     var featured = projects.filter(function (p) { return p.featured; });
     var list = featured.length ? featured : projects;
     host.innerHTML = list.map(cardHTML).join("");
-    refreshIcons();
     attachFaviconFallbacks(host);
   }
 
@@ -207,6 +268,13 @@
   }
 
   function init() {
+    // Project detail pages (/projects/{id}/) ship their favicon markup
+    // statically — no fetch needed to render them, just wire up the same
+    // real-favicon fallback chain and live status check used everywhere else.
+    if (document.querySelector("[data-project-detail]")) {
+      attachFaviconFallbacks();
+    }
+
     var needsProjects = document.querySelector(
       "[data-featured-projects], [data-projects-grid], [data-marquee-track], [data-stat-projects], [data-showcase-grid]"
     );

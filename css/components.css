@@ -212,6 +212,25 @@
 .badge--live { color: #5ee69c; border-color: rgba(94,230,156,0.35); background: rgba(94,230,156,0.08); }
 .badge--soon { color: var(--red-300); border-color: rgba(255,107,116,0.35); background: rgba(255,43,61,0.08); }
 .badge--beta { color: #ffc670; border-color: rgba(255,198,112,0.35); background: rgba(255,198,112,0.08); }
+.badge--checking { color: var(--ink-faint); }
+.badge--down { color: var(--ink-faint); border-color: rgba(255,107,116,0.3); background: rgba(255,43,61,0.05); }
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.status-dot--checking { background: var(--ink-faint); animation: status-pulse 1.4s ease-in-out infinite; }
+.status-dot--up { background: #5ee69c; box-shadow: 0 0 8px rgba(94,230,156,0.7); }
+.status-dot--down { background: var(--red-400); }
+@keyframes status-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .status-dot--checking { animation: none; opacity: 0.6; }
+}
 
 .tag {
   font-family: var(--font-mono);

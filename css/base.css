@@ -122,6 +122,22 @@ section { position: relative; }
   border-radius: 4px;
 }
 
+/* ---------- Icon sprite (self-hosted Lucide subset) ----------
+   Every icon on the site is <svg class="icon" width="N" height="N"><use
+   href="icons/lucide-sprite.svg#name"></use></svg> — no external CDN, no JS
+   required to render. Width/height are always set explicitly per-instance;
+   this class only supplies the shared stroke styling. */
+.icon {
+  display: inline-block;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 ::selection { background: var(--red-500); color: #fff; }
 
 /* Scrollbar (webkit) */

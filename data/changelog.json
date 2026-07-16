@@ -1,0 +1,4 @@
+{
+  "_documentation": "Each entry is one update shown on /changelog/ and in the 'Latest updates' strip on Home. Fields: date (YYYY-MM-DD), title, description, tags (array, e.g. project names or categories like 'Nexo Rank', 'New project'). Ships empty on purpose — add entries as you actually ship things, newest first.",
+  "entries": []
+}
